@@ -1,0 +1,1392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Nautico × Seawind — Proposal</title>
+<meta name="description" content="A presentation by Nautico for Seawind Europe — a new website and companion app, presented." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Geist','ui-sans-serif','system-ui','-apple-system','Inter','sans-serif'],
+          mono: ['Geist Mono','ui-monospace','monospace'],
+          serif: ['Instrument Serif','ui-serif','Georgia','serif'],
+        },
+        colors: {
+          paper: '#F4F1EA',
+          paper2: '#E8E3D8',
+          ink: {
+            950: '#07080A',
+            900: '#0B0D10',
+            850: '#111418',
+            800: '#15181D',
+            700: '#1E2228',
+            500: '#5A6169',
+            400: '#8A9199',
+            300: '#B5BBC2',
+          },
+          brass: '#D4B07A',
+          oceanx: '#4A90B8',
+        },
+      }
+    }
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+  :root{
+    --ink:#0B0D10;
+    --paper:#F4F1EA;
+    --brass:#D4B07A;
+    --ocean:#4A90B8;
+    --mute:#8A9199;
+  }
+  html,body{ background:var(--ink); color:var(--paper); }
+  body{ font-family:'Geist',system-ui,sans-serif; font-feature-settings:'ss01','cv11'; -webkit-font-smoothing:antialiased; }
+  .serif{ font-family:'Instrument Serif',Georgia,serif; letter-spacing:-0.01em; }
+  .mono{ font-family:'Geist Mono',ui-monospace,monospace; }
+  .tight{ letter-spacing:-0.035em; }
+  .tighter{ letter-spacing:-0.055em; }
+  .wide{ letter-spacing:0.24em; }
+
+  ::selection{ background:var(--brass); color:var(--ink); }
+
+  /* --- presentation chrome --- */
+  .chrome{ position:fixed; z-index:60; pointer-events:none; }
+  .chrome > *{ pointer-events:auto; }
+
+  .slide{ min-height:100vh; position:relative; display:flex; flex-direction:column; justify-content:center; }
+  .slide.tall{ min-height:120vh; }
+  .slide-pad{ padding: 120px 48px; }
+  @media(min-width:900px){ .slide-pad{ padding: 120px 80px; } }
+
+  .rule{ height:1px; background:linear-gradient(90deg, transparent, rgba(244,241,234,0.14), transparent); }
+
+  /* --- reveal --- */
+  .rev{ opacity:0; transform:translateY(22px); transition: opacity .9s ease, transform 1s cubic-bezier(.2,.8,.2,1); }
+  .rev.in{ opacity:1; transform:translateY(0); }
+  .rev-delay-1{ transition-delay:.08s; }
+  .rev-delay-2{ transition-delay:.16s; }
+  .rev-delay-3{ transition-delay:.24s; }
+  .rev-delay-4{ transition-delay:.32s; }
+
+  /* --- browser window frame --- */
+  .browser{
+    background: #131619;
+    border: 1px solid rgba(244,241,234,0.07);
+    border-radius: 16px;
+    box-shadow:
+      0 40px 100px -30px rgba(0,0,0,0.6),
+      0 0 0 1px rgba(244,241,234,0.04) inset,
+      0 10px 50px -20px rgba(74,144,184,0.22);
+    overflow: hidden;
+    transform-origin: center top;
+  }
+  .browser .chromebar{
+    height: 44px; background: linear-gradient(180deg,#191C20,#131619);
+    border-bottom:1px solid rgba(244,241,234,0.06);
+    display: flex; align-items: center; gap: 12px; padding: 0 14px;
+  }
+  .tl{ width:11px; height:11px; border-radius:999px; }
+  .tl.r{ background:#ED6A5E; } .tl.y{ background:#F5BF4F; } .tl.g{ background:#61C555; }
+  .urlbar{
+    flex:1; height:26px; border-radius:8px;
+    background:#0E1115; border:1px solid rgba(244,241,234,0.06);
+    display:flex; align-items:center; gap:8px; padding: 0 10px;
+    font: 12px 'Geist Mono', ui-monospace, monospace; color:#8A9199;
+  }
+  .browser .viewport{
+    background:#F4F1EA; color:#0B0D10;
+    min-height: 440px; overflow: hidden; position: relative;
+  }
+
+  /* --- phone frame --- */
+  .phone{
+    width: 280px; height: 580px; border-radius: 44px;
+    background: linear-gradient(160deg,#07080A,#15181D);
+    padding: 10px; position: relative;
+    box-shadow:
+      0 30px 80px -25px rgba(0,0,0,0.7),
+      0 0 0 1px rgba(244,241,234,0.04) inset,
+      0 0 0 6px rgba(244,241,234,0.02);
+  }
+  .phone::before{
+    content:""; position:absolute; top:18px; left:50%; transform:translateX(-50%);
+    width:108px; height:26px; border-radius:999px; background:#050607; z-index:5;
+  }
+  .phone-screen{
+    width:100%; height:100%; border-radius:36px; overflow:hidden;
+    background:#0B0D10; color:#F4F1EA; position:relative;
+  }
+  .phone-screen.paper{ background:#F4F1EA; color:#0B0D10; }
+
+  /* ---- desktop mockup site inside browser ---- */
+  .ws-nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 14px 28px; border-bottom:1px solid rgba(11,13,16,0.07);
+    background: rgba(244,241,234,0.85); backdrop-filter: blur(6px);
+  }
+  .ws-hero{
+    position: relative; padding: 80px 48px 56px;
+    background:
+      radial-gradient(700px 280px at 80% -40%, rgba(74,144,184,0.22), transparent 60%),
+      linear-gradient(180deg,#F4F1EA,#E8E3D8);
+    overflow:hidden;
+  }
+  .ws-hero::after{
+    content:""; position:absolute; bottom:0; left:0; right:0; height:36px;
+    background:
+      radial-gradient(closest-side at 50% 100%, rgba(11,13,16,0.1), transparent 70%);
+    pointer-events:none;
+  }
+
+  /* wave svg sizes */
+  .waves-xs{ display:block; width:100%; height:32px; }
+
+  /* callout line */
+  .callout{
+    position:absolute; color:#D4B07A; font-family:'Geist Mono'; font-size:11px; text-transform:uppercase; letter-spacing:0.18em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .callout .line{ height:1px; background:#D4B07A; display:block; }
+
+  /* fake cursor */
+  .cursor{ position:absolute; width:20px; height:20px; pointer-events:none; z-index:20; }
+
+  /* dot bg */
+  .dotgrid{
+    background-image: radial-gradient(rgba(244,241,234,0.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* chip styling */
+  .chip{
+    display:inline-flex; align-items:center; gap:.55rem;
+    padding:.45rem .8rem; border-radius:999px;
+    border:1px solid rgba(244,241,234,0.14);
+    background:rgba(244,241,234,0.03);
+    font: 500 11px 'Geist Mono', ui-monospace, monospace;
+    text-transform:uppercase; letter-spacing:0.18em;
+    color:#B5BBC2;
+  }
+  .chip.dark{ color:#0B0D10; border-color:rgba(11,13,16,0.12); background:rgba(11,13,16,0.04); }
+  .chip .dot{ width:6px; height:6px; border-radius:999px; background:var(--brass); box-shadow:0 0 0 4px rgba(212,176,122,0.18); }
+
+  /* buttons */
+  .btn{
+    display:inline-flex; align-items:center; gap:.6rem;
+    padding:.85rem 1.3rem; border-radius:999px;
+    font: 500 14px 'Geist',sans-serif;
+    transition: transform .3s ease, background .3s ease, border-color .3s ease;
+  }
+  .btn-p{ background:var(--paper); color:var(--ink); }
+  .btn-p:hover{ transform:translateY(-2px); }
+  .btn-g{ border:1px solid rgba(244,241,234,0.18); color:var(--paper); }
+  .btn-g:hover{ background:rgba(244,241,234,0.04); border-color:rgba(244,241,234,0.32); }
+  .btn-dk{ background:var(--ink); color:var(--paper); }
+
+  /* icon box */
+  .iconbox{
+    width:40px; height:40px; border-radius:10px;
+    display:grid; place-items:center;
+    border:1px solid rgba(244,241,234,0.12);
+    background:rgba(244,241,234,0.03);
+  }
+  .iconbox.light{ border-color:rgba(11,13,16,0.1); background:rgba(11,13,16,0.04); color:#0B0D10; }
+
+  /* floating tab rail */
+  .rail{
+    position:fixed; right:24px; top:50%; transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:10px; z-index:55;
+  }
+  .rail a{
+    width:6px; height:22px; border-radius:3px; background:rgba(244,241,234,0.14);
+    transition: background .3s;
+  }
+  .rail a.active{ background:var(--brass); }
+
+  /* slide counter */
+  .counter{
+    position:fixed; left:24px; bottom:24px; z-index:55;
+    font: 500 12px 'Geist Mono'; letter-spacing:0.2em; text-transform:uppercase;
+    color:#8A9199;
+  }
+  .counter b{ color:var(--paper); }
+
+  /* nav pills */
+  .navpill{
+    position:fixed; top:18px; left:50%; transform:translateX(-50%);
+    z-index:55;
+    display:flex; align-items:center; gap:10px;
+    padding:8px 12px; border-radius:999px;
+    background:rgba(11,13,16,0.6); backdrop-filter: blur(10px);
+    border:1px solid rgba(244,241,234,0.08);
+    font: 500 12px 'Geist Mono'; letter-spacing:0.16em; text-transform:uppercase; color:#B5BBC2;
+  }
+  .navpill .mark{
+    width:18px; height:18px; border-radius:4px; background:linear-gradient(135deg,#F4F1EA,#D4B07A);
+    color:#0B0D10; display:grid; place-items:center; font:600 11px 'Geist';
+  }
+
+  /* arrows */
+  .arrows{
+    position:fixed; right:24px; bottom:24px; z-index:55;
+    display:flex; gap:8px;
+  }
+  .arrows button{
+    width:36px; height:36px; border-radius:999px;
+    background:rgba(11,13,16,0.6); border:1px solid rgba(244,241,234,0.1);
+    color:#F4F1EA; display:grid; place-items:center;
+    transition: background .3s, border-color .3s;
+  }
+  .arrows button:hover{ background:rgba(244,241,234,0.08); border-color:rgba(244,241,234,0.24); }
+
+  /* highlight flash */
+  .hl{
+    position:absolute; border:1px solid var(--brass);
+    box-shadow: 0 0 0 4px rgba(212,176,122,0.12);
+    border-radius:10px; pointer-events:none;
+    opacity:0;
+  }
+
+  /* spec line */
+  .spec{ display:flex; justify-content:space-between; align-items:baseline; padding:10px 0; border-bottom:1px solid rgba(11,13,16,0.08); }
+  .spec:last-child{ border-bottom:none; }
+  .spec b{ font-weight:500; }
+
+  /* model cards */
+  .m-card{
+    border:1px solid rgba(11,13,16,0.08); border-radius:12px;
+    padding: 18px; background:#FAF8F2;
+    transition: transform .4s ease, box-shadow .4s ease;
+  }
+  .m-card:hover{ transform: translateY(-2px); box-shadow: 0 10px 20px -12px rgba(11,13,16,0.2); }
+
+  /* star */
+  .star{ position:absolute; width:2px; height:2px; background:#F4F1EA; border-radius:999px; opacity:.55; }
+
+  /* scroll hint */
+  .scroll-hint{
+    position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
+    color:#B5BBC2; font: 500 11px 'Geist Mono'; letter-spacing:0.3em; text-transform:uppercase;
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+  }
+  .scroll-hint .line-v{
+    width:1px; height:44px; background:linear-gradient(180deg, rgba(244,241,234,0.3), transparent);
+    animation: lineflow 2s ease-in-out infinite;
+  }
+  @keyframes lineflow{ 0%,100%{ opacity:.4; transform: scaleY(1);} 50%{ opacity:1; transform: scaleY(1.1);} }
+
+  /* kbd */
+  kbd{ font:500 11px 'Geist Mono'; padding:2px 6px; border-radius:4px; border:1px solid rgba(244,241,234,0.2); background:rgba(244,241,234,0.04); color:#B5BBC2; }
+
+  /* underline animated */
+  .u-anim{ position:relative; }
+  .u-anim::after{ content:""; position:absolute; left:0; bottom:-2px; width:100%; height:1px; background:var(--brass); transform-origin:left; transform:scaleX(0); transition:transform .6s ease; }
+  .u-anim.in::after{ transform:scaleX(1); }
+
+  /* phone screen transition */
+  .scr-fade{ animation: scrfade .45s ease both; }
+  @keyframes scrfade{ from{ opacity:0; transform: translateY(6px); } to{ opacity:1; transform:none;} }
+
+  /* tab */
+  .tb{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding: 12px 14px; border-radius:12px;
+    border:1px solid rgba(244,241,234,0.09);
+    cursor:pointer; transition: background .3s, border-color .3s, color .3s;
+  }
+  .tb:hover{ background:rgba(244,241,234,0.04); }
+  .tb[aria-selected="true"]{ background:var(--paper); color:var(--ink); border-color:var(--paper); }
+  .tb[aria-selected="true"] .lbl{ color:var(--ink); }
+  .tb[aria-selected="true"] .ic{ color:var(--ink); }
+
+  /* sparkline animate */
+  .spark path{ stroke-dasharray: 320; stroke-dashoffset: 320; animation: draw 2.2s ease forwards; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  /* fade-stage */
+  .fadestage{ position:relative; }
+  .fadestage > *{ position:absolute; inset:0; opacity:0; transition:opacity .6s ease; }
+  .fadestage > .active{ opacity:1; position:relative; }
+
+  /* screen list bg */
+  .appbar{
+    position:sticky; top:0; padding: 32px 16px 10px;
+    background: linear-gradient(180deg, rgba(11,13,16,1), rgba(11,13,16,0.85));
+  }
+
+  /* progress line */
+  .prog{
+    position:fixed; left:0; top:0; height:2px; background:var(--brass); z-index:70;
+    transform-origin:left; transform:scaleX(0);
+  }
+
+  /* tasteful divider */
+  .vdivider{ width:1px; align-self:stretch; background:linear-gradient(180deg,transparent,rgba(244,241,234,0.14),transparent); }
+
+  /* hero number */
+  .bignum{ font-family:'Instrument Serif',serif; font-style:italic; letter-spacing:-0.02em; }
+
+</style>
+</head>
+<body class="overflow-x-hidden">
+
+<!-- ================= CHROME ================= -->
+<div class="prog" id="prog"></div>
+
+<div class="navpill">
+  <div class="mark">N</div>
+  <span>Nautico × Seawind</span>
+  <span class="opacity-40">·</span>
+  <span>Presentation 01</span>
+</div>
+
+<div class="rail" id="rail">
+  <a href="#s1" data-i="1"></a>
+  <a href="#s2" data-i="2"></a>
+  <a href="#s3" data-i="3"></a>
+  <a href="#s4" data-i="4"></a>
+  <a href="#s5" data-i="5"></a>
+  <a href="#s6" data-i="6"></a>
+  <a href="#s7" data-i="7"></a>
+  <a href="#s8" data-i="8"></a>
+  <a href="#s9" data-i="9"></a>
+</div>
+
+<div class="counter"><span id="cur">01</span><span class="opacity-40"> / 09</span></div>
+
+<div class="arrows">
+  <button id="prev" aria-label="Previous">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button id="next" aria-label="Next">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+
+<!-- ================= 01 COVER ================= -->
+<section id="s1" class="slide slide-pad">
+  <div id="stars" class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true"></div>
+
+  <div class="max-w-6xl mx-auto w-full relative">
+    <div class="flex items-center gap-3 rev in">
+      <span class="chip"><span class="dot"></span>Proposal · April 2026</span>
+      <span class="chip">For Seawind Europe</span>
+    </div>
+
+    <h1 class="mt-14 tighter text-[64px] md:text-[128px] leading-[0.92] font-light">
+      A <span class="serif italic font-normal">new</span> Seawind<br/>
+      online, and <span class="serif italic font-normal">on the water.</span>
+    </h1>
+
+    <p class="mt-10 text-ink-300 max-w-2xl text-lg md:text-xl leading-relaxed">
+      A website and a companion app — presented. Scroll, or use
+      <kbd>←</kbd> <kbd>→</kbd> to walk through the slides.
+    </p>
+
+    <div class="mt-12 flex flex-wrap items-center gap-3">
+      <a href="#s2" class="btn btn-p">Begin presentation
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <span class="mono text-ink-400 text-xs tracking-[0.22em] uppercase">9 slides · ~5 minute walk-through</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint"><span>Scroll</span><div class="line-v"></div></div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ================= 02 CONTEXT ================= -->
+<section id="s2" class="slide slide-pad">
+  <div class="max-w-6xl mx-auto w-full">
+    <div class="flex items-center gap-3 rev">
+      <span class="mono text-ink-400 text-xs wide">02 — Context</span>
+    </div>
+    <h2 class="mt-8 tight text-[44px] md:text-[80px] leading-[1.0] font-light rev rev-delay-1 max-w-5xl">
+      Seawind builds <span class="serif italic">the boats.</span><br/>
+      We'll build <span class="serif italic">the everything else.</span>
+    </h2>
+
+    <div class="mt-16 grid md:grid-cols-3 gap-6">
+      <div class="rev rev-delay-2 p-6 rounded-xl border border-white/8 bg-white/[0.02]">
+        <div class="iconbox">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <div class="mt-5 text-ink-300 text-sm mono wide">TODAY</div>
+        <h3 class="mt-1 font-light text-xl">A blog + a Facebook group.</h3>
+        <p class="mt-2 text-ink-400 text-[13px] leading-relaxed">Prospects meet Seawind through a static site. Owners live in a Facebook group. Dealers work in email. Service lives in inboxes.</p>
+      </div>
+      <div class="rev rev-delay-3 p-6 rounded-xl border border-white/8 bg-white/[0.02]">
+        <div class="iconbox">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4-9 4-9-4z M3 12l9 4 9-4 M3 17l9 4 9-4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="mt-5 text-ink-300 text-sm mono wide">COMPETITORS</div>
+        <h3 class="mt-1 font-light text-xl">Leopard has a manual viewer.</h3>
+        <p class="mt-2 text-ink-400 text-[13px] leading-relaxed">MyLeopard is a white-label parts &amp; PDF app. Functional, forgettable. The bar is set low.</p>
+      </div>
+      <div class="rev rev-delay-4 p-6 rounded-xl border border-brass/30 bg-brass/[0.04]">
+        <div class="iconbox" style="border-color:rgba(212,176,122,0.32);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="color:#D4B07A"><path d="M12 2l2.5 6.5L21 10l-5 4.5L17.5 22 12 18l-5.5 4L8 14.5 3 10l6.5-1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="mt-5 text-brass text-sm mono wide">THE OPPORTUNITY</div>
+        <h3 class="mt-1 font-light text-xl">A site &amp; app as considered as the boats.</h3>
+        <p class="mt-2 text-ink-400 text-[13px] leading-relaxed">One brand, one data model, three surfaces: buyers' site, owners' app, dealer back-office.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ================= 03 WEBSITE INTRO ================= -->
+<section id="s3" class="slide slide-pad tall">
+  <div class="max-w-6xl mx-auto w-full">
+    <div class="flex items-center gap-3 rev">
+      <span class="mono text-ink-400 text-xs wide">03 — Surface 01</span>
+      <span class="chip"><span class="dot"></span>Seawindcats.com, reimagined</span>
+    </div>
+    <h2 class="mt-8 tight text-[44px] md:text-[80px] leading-[1.0] font-light rev rev-delay-1 max-w-5xl">
+      The <span class="serif italic">website.</span>
+    </h2>
+    <p class="mt-8 max-w-2xl text-ink-300 text-lg rev rev-delay-2">
+      A desktop experience that sells as well as the boats do. Below: the homepage as we'd build it. Scroll to explore the interactions.
+    </p>
+
+    <!-- Browser frame with website mockup -->
+    <div id="browserFrame" class="mt-20 relative rev rev-delay-3">
+      <div class="browser mx-auto" style="max-width:1080px;">
+        <div class="chromebar">
+          <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+          <div class="urlbar">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 1l9 4v6c0 5.2-3.7 9.7-9 12-5.3-2.3-9-6.8-9-12V5l9-4z" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>seawindcats.com</span>
+            <span class="ml-auto opacity-60">·</span>
+          </div>
+          <div class="flex items-center gap-2 text-ink-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+
+        <!-- Viewport : the proposed seawindcats.com -->
+        <div class="viewport" id="wsView">
+
+          <!-- Site nav -->
+          <div class="ws-nav">
+            <div class="flex items-center gap-10">
+              <div class="flex items-center gap-2 text-ink-900">
+                <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
+                  <path d="M6 40 C 18 32, 28 32, 32 40 C 36 32, 46 32, 58 40" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                  <path d="M32 10 L36 36 L28 36 Z" fill="currentColor"/>
+                </svg>
+                <span class="mono wide text-xs">SEAWIND</span>
+              </div>
+              <nav class="hidden md:flex items-center gap-7 text-[13px] text-ink-900/85">
+                <span>Catamarans</span><span>Ownership</span><span>Technology</span><span>Company</span><span>Stories</span>
+              </nav>
+            </div>
+            <div class="flex items-center gap-3 text-[13px]">
+              <span class="text-ink-900/70">EN · TR</span>
+              <button class="btn btn-dk" style="padding:.45rem .9rem; font-size:12px;">Request a sea trial</button>
+            </div>
+          </div>
+
+          <!-- Hero -->
+          <div class="ws-hero">
+            <div class="max-w-5xl">
+              <div class="chip dark" style="padding:.3rem .6rem; font-size:10px;">NEW · Seawind 1270 · Hybrid-electric</div>
+              <h3 class="mt-6 text-[44px] md:text-[64px] leading-[0.98] tighter font-light text-ink-900 max-w-4xl">
+                Real boats, <span class="serif italic">real sailors,</span><br/>
+                real ocean.
+              </h3>
+              <p class="mt-5 text-ink-900/70 max-w-xl text-[15px] leading-relaxed">
+                Forty-two years of bluewater catamaran design. Built in Vietnam and İzmir, delivered anywhere you want to drop anchor.
+              </p>
+              <div class="mt-8 flex flex-wrap gap-3">
+                <span class="btn btn-dk" style="font-size:13px;">Explore the fleet
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="btn" style="background:transparent;color:#0B0D10;border:1px solid rgba(11,13,16,0.14); font-size:13px;">Book a factory visit</span>
+              </div>
+
+              <!-- Mini model rail -->
+              <div class="mt-10 grid grid-cols-5 gap-2 max-w-3xl">
+                <div class="m-card">
+                  <div class="mono wide text-[9px] text-ink-500">1160XL</div>
+                  <div class="mt-1 text-xs font-medium">38'10"</div>
+                  <svg viewBox="0 0 100 28" class="mt-2 w-full"><path d="M8 20 Q 50 6 92 20" stroke="#0B0D10" stroke-width="1.2" fill="none"/><path d="M50 6 L52 18 L48 18 Z" fill="#0B0D10"/></svg>
+                </div>
+                <div class="m-card">
+                  <div class="mono wide text-[9px] text-ink-500">1170</div>
+                  <div class="mt-1 text-xs font-medium">39'3"</div>
+                  <svg viewBox="0 0 100 28" class="mt-2 w-full"><path d="M8 20 Q 50 6 92 20" stroke="#0B0D10" stroke-width="1.2" fill="none"/><path d="M50 6 L52 18 L48 18 Z" fill="#0B0D10"/></svg>
+                </div>
+                <div class="m-card" style="outline:1px solid #D4B07A;">
+                  <div class="mono wide text-[9px]" style="color:#96733F;">1270 NEW</div>
+                  <div class="mt-1 text-xs font-medium">42'</div>
+                  <svg viewBox="0 0 100 28" class="mt-2 w-full"><path d="M8 20 Q 50 5 92 20" stroke="#0B0D10" stroke-width="1.3" fill="none"/><path d="M50 5 L53 18 L47 18 Z" fill="#0B0D10"/></svg>
+                </div>
+                <div class="m-card">
+                  <div class="mono wide text-[9px] text-ink-500">1370</div>
+                  <div class="mt-1 text-xs font-medium">45'</div>
+                  <svg viewBox="0 0 100 28" class="mt-2 w-full"><path d="M8 20 Q 50 4 92 20" stroke="#0B0D10" stroke-width="1.4" fill="none"/><path d="M50 4 L54 18 L46 18 Z" fill="#0B0D10"/></svg>
+                </div>
+                <div class="m-card">
+                  <div class="mono wide text-[9px] text-ink-500">1600</div>
+                  <div class="mt-1 text-xs font-medium">52'8"</div>
+                  <svg viewBox="0 0 100 28" class="mt-2 w-full"><path d="M8 20 Q 50 3 92 20" stroke="#0B0D10" stroke-width="1.6" fill="none"/><path d="M50 3 L54 18 L46 18 Z" fill="#0B0D10"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Wave baseline -->
+            <svg class="absolute left-0 right-0 bottom-0 w-full" viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,40 C300,10 600,60 900,30 C1100,12 1200,30 1200,30 L1200,60 L0,60 Z" fill="rgba(74,144,184,0.18)"/><path d="M0,46 C300,26 600,52 900,38 C1100,28 1200,42 1200,42 L1200,60 L0,60 Z" fill="rgba(74,144,184,0.32)"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Callouts -->
+      <div class="hidden md:block">
+        <div class="callout" style="top:40px; left:-180px; width:180px;">
+          <span class="line w-12"></span>
+          <span>Clean top bar</span>
+        </div>
+        <div class="callout" style="top:220px; left:-200px; width:200px;">
+          <span class="line w-16"></span>
+          <span>Serif-italic highlight</span>
+        </div>
+        <div class="callout" style="bottom:80px; right:-200px; width:200px; justify-content:flex-end;">
+          <span>Five-model rail</span>
+          <span class="line w-14"></span>
+        </div>
+        <div class="callout" style="top:100px; right:-220px; width:220px; justify-content:flex-end;">
+          <span>EN · TR · FR · IT</span>
+          <span class="line w-12"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ================= 04 WEBSITE FEATURES ================= -->
+<section id="s4" class="slide slide-pad">
+  <div class="max-w-6xl mx-auto w-full">
+    <div class="flex items-center gap-3 rev">
+      <span class="mono text-ink-400 text-xs wide">04 — What the website does</span>
+    </div>
+    <h2 class="mt-8 tight text-[44px] md:text-[72px] leading-[1.02] font-light rev rev-delay-1 max-w-5xl">
+      Four surfaces. <span class="serif italic">One identity.</span>
+    </h2>
+
+    <div class="mt-16 grid md:grid-cols-2 gap-6">
+      <div class="rev rev-delay-2 p-7 rounded-xl border border-white/8 bg-white/[0.02]">
+        <div class="iconbox">
+          <!-- compass -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="mt-5 text-2xl font-light">Model Explorer</h3>
+        <p class="text-ink-400 text-sm mt-2 leading-relaxed">Cinematic page per model. 3D walk-through, sail plan, deck layout, launch timeline, nearest dealer with chat. Compares across the range in one click.</p>
+      </div>
+
+      <div class="rev rev-delay-3 p-7 rounded-xl border border-white/8 bg-white/[0.02]">
+        <div class="iconbox">
+          <!-- sliders -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h12M4 12h16M4 18h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="6" r="2" fill="currentColor"/><circle cx="14" cy="18" r="2" fill="currentColor"/></svg>
+        </div>
+        <h3 class="mt-5 text-2xl font-light">Configurator &amp; reservation</h3>
+        <p class="text-ink-400 text-sm mt-2 leading-relaxed">Hull, layout, propulsion (including hybrid-electric), helm electronics, commissioning port — live price, savable, sharable with a dealer, followed by a reservation deposit.</p>
+      </div>
+
+      <div class="rev rev-delay-4 p-7 rounded-xl border border-white/8 bg-white/[0.02]">
+        <div class="iconbox">
+          <!-- map -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <h3 class="mt-5 text-2xl font-light">Dealer network</h3>
+        <p class="text-ink-400 text-sm mt-2 leading-relaxed">Every dealer on a world map. Chat, send a spec, book a sea trial at Bodrum, Palma, Annapolis, Sydney. Dealer portal behind the scenes.</p>
+      </div>
+
+      <div class="rev rev-delay-4 p-7 rounded-xl border border-white/8 bg-white/[0.02]">
+        <div class="iconbox">
+          <!-- book -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h6a3 3 0 013 3v13a2 2 0 00-2-2H4V4zM20 4h-6a3 3 0 00-3 3v13a2 2 0 012-2h7V4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="mt-5 text-2xl font-light">Stories &amp; Journal</h3>
+        <p class="text-ink-400 text-sm mt-2 leading-relaxed">Owner voyages, factory updates, technical deep-dives. The blog becomes a story engine with hero films and typography that behaves like a magazine.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ================= 05 APP INTRO ================= -->
+<section id="s5" class="slide slide-pad">
+  <div class="max-w-6xl mx-auto w-full">
+    <div class="flex items-center gap-3 rev">
+      <span class="mono text-ink-400 text-xs wide">05 — Surface 02</span>
+      <span class="chip"><span class="dot"></span>The companion app</span>
+    </div>
+    <h2 class="mt-8 tight text-[44px] md:text-[80px] leading-[1.0] font-light rev rev-delay-1 max-w-5xl">
+      The <span class="serif italic">app.</span>
+    </h2>
+    <p class="mt-8 max-w-2xl text-ink-300 text-lg rev rev-delay-2">
+      A native iOS &amp; Android app every owner downloads the day they sign. Below: the home screen and build tracker, side by side.
+    </p>
+
+    <div class="mt-20 grid md:grid-cols-2 gap-10 items-center rev rev-delay-3">
+
+      <!-- Phone 1: Home -->
+      <div class="flex justify-center md:justify-end">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="appbar">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="mono wide text-[9px] text-ink-400">Seawind Owner</div>
+                  <div class="serif italic text-[22px] leading-tight mt-0.5">Günaydın, Arman.</div>
+                </div>
+                <div class="iconbox" style="width:34px; height:34px; border-radius:999px; border-color:rgba(244,241,234,0.12);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 17h5l-1.4-1.4A2 2 0 0118 14V11a6 6 0 10-12 0v3a2 2 0 01-.6 1.4L4 17h5" stroke="#F4F1EA" stroke-width="1.5" stroke-linecap="round"/><path d="M9 17a3 3 0 006 0" stroke="#F4F1EA" stroke-width="1.5"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="px-4 space-y-3">
+
+              <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+                <div class="mono wide text-[9px] text-ink-400">YOUR SEAWIND</div>
+                <div class="mt-1 flex items-center justify-between">
+                  <div>
+                    <div class="font-medium text-[14px]">1270 · Hull 014</div>
+                    <div class="text-[11px] text-ink-400">Galley down · Hybrid-electric</div>
+                  </div>
+                  <svg width="42" height="18" viewBox="0 0 42 18"><path d="M2 12 Q 21 2 40 12" stroke="#D4B07A" stroke-width="1.4" fill="none"/></svg>
+                </div>
+                <div class="mt-3 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full" style="width:62%; background:linear-gradient(90deg,#D4B07A,#F4F1EA);"></div></div>
+                <div class="mt-1.5 flex justify-between text-[10px] text-ink-400"><span>Build · 62%</span><span>Handover · Aug 2026</span></div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+                  <div class="flex items-center gap-1.5 text-ink-400">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M2 12c3-3 5-3 7 0s4 3 7 0 5-3 6 0" stroke="currentColor" stroke-width="1.6"/><path d="M2 18c3-3 5-3 7 0s4 3 7 0 5-3 6 0" stroke="currentColor" stroke-width="1.6"/></svg>
+                    <span class="mono wide text-[9px]">PASSAGE</span>
+                  </div>
+                  <div class="font-medium text-[13px] mt-1.5">Bodrum → Kos</div>
+                  <div class="text-[10px] text-ink-400">6.4kt · NE 14</div>
+                </div>
+                <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+                  <div class="flex items-center gap-1.5 text-ink-400">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                    <span class="mono wide text-[9px]">WEATHER</span>
+                  </div>
+                  <div class="font-medium text-[13px] mt-1.5">Partly clear</div>
+                  <div class="text-[10px] text-ink-400">22° · swell 0.6m</div>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl" style="background:rgba(212,176,122,0.1); border:1px solid rgba(212,176,122,0.3);">
+                <div class="flex items-start gap-2">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="color:#D4B07A"><path d="M12 2l2.5 6.5L21 10l-5 4.5L17.5 22 12 18l-5.5 4L8 14.5 3 10l6.5-1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                  <div class="flex-1">
+                    <div class="mono wide text-[9px]" style="color:#D4B07A;">FLOTILLA · SEP</div>
+                    <div class="text-[12px] mt-0.5">Ionian · 14 boats confirmed</div>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full" style="background:#D4B07A; color:#0B0D10;">RSVP</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+                <div class="mono wide text-[9px] text-ink-400">SERVICE DUE</div>
+                <div class="mt-1 flex items-center justify-between">
+                  <div>
+                    <div class="text-[12px]">Yanmar · 250hr</div>
+                    <div class="text-[10px] text-ink-400">Recommended in 14 days</div>
+                  </div>
+                  <span class="text-[10px] px-2 py-1 rounded-full border border-white/20">Book</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone 2: Build tracker -->
+      <div class="flex justify-center md:justify-start">
+        <div class="phone" style="transform: rotate(2deg);">
+          <div class="phone-screen">
+            <div class="appbar">
+              <div class="flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#F4F1EA" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <div class="mono wide text-[9px] text-ink-400">BUILD TRACKER</div>
+              </div>
+              <div class="serif italic text-[22px] leading-tight mt-1">Hull 014, <span class="opacity-60">on schedule.</span></div>
+            </div>
+            <div class="px-4 space-y-3">
+
+              <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="mono wide text-[9px] text-ink-400">NOW · JOINERY</div>
+                    <div class="font-medium text-[13px] mt-1">Interior cabinetry · port hull</div>
+                  </div>
+                  <div class="text-[11px]" style="color:#D4B07A">42%</div>
+                </div>
+                <div class="mt-2 h-1 rounded-full bg-white/10 overflow-hidden"><div class="h-full" style="width:42%; background:#D4B07A;"></div></div>
+                <div class="mt-1.5 text-[10px] text-ink-400">Due 28 May · İzmir</div>
+              </div>
+
+              <div class="p-3 rounded-xl flex items-center gap-3" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+                <div class="w-10 h-10 rounded-md flex items-center justify-center" style="background:linear-gradient(160deg,#1E2228,#0B0D10); border:1px solid rgba(244,241,234,0.08);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 17l6-6 4 4 8-8" stroke="#D4B07A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 7h7v7" stroke="#D4B07A" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div class="flex-1">
+                  <div class="text-[11px]">On track for handover</div>
+                  <div class="text-[10px] text-ink-400">Aug 2026 · İzmir commissioning</div>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+                <div class="mono wide text-[9px] text-ink-400">TODAY · FROM THE YARD</div>
+                <div class="mt-2 h-24 rounded-lg" style="background: linear-gradient(160deg,#1E4060,#0B0D10); position:relative; overflow:hidden;">
+                  <svg viewBox="0 0 200 90" class="absolute inset-0 w-full h-full"><path d="M0,70 Q 100,30 200,70" stroke="rgba(244,241,234,0.3)" stroke-width="1" fill="none"/><circle cx="100" cy="30" r="1.5" fill="#D4B07A"/></svg>
+                </div>
+                <div class="text-[10px] text-ink-400 mt-2">"Bulkheads fitted. Wiring in port hull today." — Mert, PM</div>
+              </div>
+
+              <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+                <div class="mono wide text-[9px] text-ink-400">MESSAGES</div>
+                <div class="mt-1 flex items-center justify-between">
+                  <div class="text-[12px]">Mert Aydın · Project Manager</div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full border border-white/20">Open</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-16 text-center mono wide text-[11px] text-ink-400 rev rev-delay-4">
+      Native iOS · Android · Web &nbsp;·&nbsp; Offline-first at sea &nbsp;·&nbsp; Multilingual (EN · TR · FR · IT · ES)
+    </p>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ================= 06 APP DEEP DIVE ================= -->
+<section id="s6" class="slide slide-pad">
+  <div class="max-w-6xl mx-auto w-full">
+    <div class="flex items-center gap-3 rev">
+      <span class="mono text-ink-400 text-xs wide">06 — Inside the app</span>
+    </div>
+    <h2 class="mt-8 tight text-[44px] md:text-[72px] leading-[1.0] font-light rev rev-delay-1 max-w-5xl">
+      Six <span class="serif italic">moments</span>, one app.
+    </h2>
+
+    <div class="mt-16 grid lg:grid-cols-12 gap-10 items-start">
+
+      <!-- Tabs -->
+      <div class="lg:col-span-5 space-y-2">
+
+        <div class="tb rev rev-delay-1" role="tab" aria-selected="true" data-tab="log">
+          <div class="flex items-center gap-3">
+            <span class="ic">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="lbl font-light">Passage log &amp; routing</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+
+        <div class="tb rev rev-delay-2" role="tab" aria-selected="false" data-tab="build">
+          <div class="flex items-center gap-3">
+            <span class="ic">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 6l4 4m-7-1l7-7 5 5-7 7m-9 4h.01M3 21l4-10 10 10" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="lbl font-light">Live build tracker</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+
+        <div class="tb rev rev-delay-3" role="tab" aria-selected="false" data-tab="service">
+          <div class="flex items-center gap-3">
+            <span class="ic">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.1 2.1-2.8-2.8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="lbl font-light">Service &amp; maintenance</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+
+        <div class="tb rev rev-delay-3" role="tab" aria-selected="false" data-tab="parts">
+          <div class="flex items-center gap-3">
+            <span class="ic">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 11.5A9 9 0 106 17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg>
+            </span>
+            <span class="lbl font-light">Parts &amp; manuals</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+
+        <div class="tb rev rev-delay-4" role="tab" aria-selected="false" data-tab="flot">
+          <div class="flex items-center gap-3">
+            <span class="ic">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 14c4 0 8-2 8-5s-4-5-8-5-8 2-8 5 4 5 8 5z M4 14c1 4 4 6 8 6s7-2 8-6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="lbl font-light">Flotillas &amp; events</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+
+        <div class="tb rev rev-delay-4" role="tab" aria-selected="false" data-tab="weather">
+          <div class="flex items-center gap-3">
+            <span class="ic">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 17a5 5 0 01.1-9.9 7 7 0 0113.4 3.4A4 4 0 0118 18H6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="lbl font-light">Weather &amp; forecast</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <!-- Phone stage -->
+      <div class="lg:col-span-7 rev rev-delay-2">
+        <div class="relative p-10 md:p-16 rounded-2xl border border-white/8 overflow-hidden min-h-[620px] flex items-center justify-center">
+          <div class="absolute inset-0 dotgrid opacity-30"></div>
+
+          <div class="phone" style="width:290px; height:600px;">
+            <div id="bigscreen" class="phone-screen"></div>
+          </div>
+
+          <div class="absolute top-6 left-6 chip">OFFLINE-FIRST</div>
+          <div class="absolute bottom-6 right-6 chip">REALTIME</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ================= 07 AUDIENCES ================= -->
+<section id="s7" class="slide slide-pad">
+  <div class="max-w-6xl mx-auto w-full">
+    <div class="flex items-center gap-3 rev">
+      <span class="mono text-ink-400 text-xs wide">07 — For every audience</span>
+    </div>
+    <h2 class="mt-8 tight text-[44px] md:text-[72px] leading-[1.02] font-light rev rev-delay-1 max-w-5xl">
+      One platform. <span class="serif italic">Three surfaces.</span>
+    </h2>
+
+    <div class="mt-16 grid md:grid-cols-3 gap-6">
+      <div class="rev rev-delay-1 p-7 rounded-xl border border-white/8 bg-white/[0.02]">
+        <div class="iconbox">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="mt-5 mono wide text-[10px] text-ink-400">BUYERS</div>
+        <h3 class="mt-1 text-2xl font-light">The discovery.</h3>
+        <ul class="mt-4 text-ink-300 text-[13px] leading-relaxed space-y-1.5">
+          <li>Cinematic model explorer</li>
+          <li>360° + layout walk-throughs</li>
+          <li>Live configurator &amp; reservation</li>
+          <li>Dealer chat &amp; sea trial booking</li>
+        </ul>
+      </div>
+
+      <div class="rev rev-delay-2 p-7 rounded-xl border border-brass/30 bg-brass/[0.05]">
+        <div class="iconbox" style="border-color:rgba(212,176,122,0.35); color:#D4B07A;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="mt-5 mono wide text-[10px] text-brass">OWNERS &amp; CAPTAINS</div>
+        <h3 class="mt-1 text-2xl font-light">The voyage.</h3>
+        <ul class="mt-4 text-ink-300 text-[13px] leading-relaxed space-y-1.5">
+          <li>Live build tracker · yard photos</li>
+          <li>Passage log, charts, offline nav</li>
+          <li>Service, parts, warranty in one tap</li>
+          <li>Flotillas, owner stories, chapters</li>
+        </ul>
+      </div>
+
+      <div class="rev rev-delay-3 p-7 rounded-xl border border-white/8 bg-white/[0.02]">
+        <div class="iconbox">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <div class="mt-5 mono wide text-[10px] text-ink-400">DEALERS &amp; FACTORY</div>
+        <h3 class="mt-1 text-2xl font-light">The command.</h3>
+        <ul class="mt-4 text-ink-300 text-[13px] leading-relaxed space-y-1.5">
+          <li>Lead pipeline &amp; quotes</li>
+          <li>Build management · İzmir · HCM</li>
+          <li>Service ticket queue, SLA</li>
+          <li>Fleet-wide analytics, NPS</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ================= 08 TIMELINE / TECH ================= -->
+<section id="s8" class="slide slide-pad">
+  <div class="max-w-6xl mx-auto w-full">
+    <div class="flex items-center gap-3 rev">
+      <span class="mono text-ink-400 text-xs wide">08 — The plan</span>
+    </div>
+    <h2 class="mt-8 tight text-[44px] md:text-[72px] leading-[1.02] font-light rev rev-delay-1 max-w-5xl">
+      Eight weeks to MVP. <span class="serif italic">Sixteen to launch.</span>
+    </h2>
+
+    <div class="mt-16 grid lg:grid-cols-12 gap-10">
+
+      <!-- Timeline -->
+      <div class="lg:col-span-6 rev rev-delay-2">
+        <ol class="space-y-6">
+          <li class="flex gap-6">
+            <span class="bignum text-3xl text-brass w-12 shrink-0">01</span>
+            <div>
+              <div class="mono wide text-[10px] text-ink-400">WK 1–3 · DESIGN &amp; FOUNDATION</div>
+              <div class="font-light text-lg mt-0.5">Brand system · Supabase schema · auth</div>
+              <p class="text-ink-400 text-sm mt-1">Seed from seawindcats.com. Visual system, dealer import, user roles.</p>
+            </div>
+          </li>
+          <li class="flex gap-6">
+            <span class="bignum text-3xl text-brass w-12 shrink-0">02</span>
+            <div>
+              <div class="mono wide text-[10px] text-ink-400">WK 4–8 · MVP</div>
+              <div class="font-light text-lg mt-0.5">Website, configurator, owner hub v1</div>
+              <p class="text-ink-400 text-sm mt-1">Model explorer, live price configurator, build tracker, dealer back-office.</p>
+            </div>
+          </li>
+          <li class="flex gap-6">
+            <span class="bignum text-3xl text-brass w-12 shrink-0">03</span>
+            <div>
+              <div class="mono wide text-[10px] text-ink-400">WK 9–14 · APP STORE &amp; COMMUNITY</div>
+              <div class="font-light text-lg mt-0.5">iOS &amp; Android · parts · Stripe</div>
+              <p class="text-ink-400 text-sm mt-1">Passage log, offline-first sync, flotillas, warranty, parts store.</p>
+            </div>
+          </li>
+          <li class="flex gap-6">
+            <span class="bignum text-3xl text-brass w-12 shrink-0">04</span>
+            <div>
+              <div class="mono wide text-[10px] text-ink-400">WK 15–16 · LAUNCH</div>
+              <div class="font-light text-lg mt-0.5">Boat-show reveal · press kit · dealer rollout</div>
+              <p class="text-ink-400 text-sm mt-1">Cannes, Düsseldorf or Annapolis — your call.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Tech grid -->
+      <div class="lg:col-span-6 rev rev-delay-3 grid grid-cols-2 gap-3">
+        <div class="p-5 rounded-xl border border-white/8 bg-white/[0.02]">
+          <div class="iconbox mb-3"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="2" width="14" height="20" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M11 18h2" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="mono wide text-[10px] text-ink-400">PLATFORM</div>
+          <div class="font-light text-[15px] mt-0.5">Native iOS · Android · Web</div>
+        </div>
+        <div class="p-5 rounded-xl border border-white/8 bg-white/[0.02]">
+          <div class="iconbox mb-3"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="5" rx="8" ry="3" stroke="currentColor" stroke-width="1.5"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="mono wide text-[10px] text-ink-400">BACKEND</div>
+          <div class="font-light text-[15px] mt-0.5">Supabase · Postgres · Realtime</div>
+        </div>
+        <div class="p-5 rounded-xl border border-white/8 bg-white/[0.02]">
+          <div class="iconbox mb-3"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 1l22 22M9 9a5 5 0 017 7M6 6a9 9 0 0112 12M3 3a13 13 0 0118 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="mono wide text-[10px] text-ink-400">AT SEA</div>
+          <div class="font-light text-[15px] mt-0.5">Offline-first sync</div>
+        </div>
+        <div class="p-5 rounded-xl border border-white/8 bg-white/[0.02]">
+          <div class="iconbox mb-3"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="mono wide text-[10px] text-ink-400">LANGUAGES</div>
+          <div class="font-light text-[15px] mt-0.5">EN · TR · FR · IT · ES</div>
+        </div>
+        <div class="p-5 rounded-xl border border-white/8 bg-white/[0.02]">
+          <div class="iconbox mb-3"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 10h20" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="mono wide text-[10px] text-ink-400">COMMERCE</div>
+          <div class="font-light text-[15px] mt-0.5">Stripe · deposits · parts</div>
+        </div>
+        <div class="p-5 rounded-xl border border-white/8 bg-white/[0.02]">
+          <div class="iconbox mb-3"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 20h18M5 20V9m6 11V4m6 16v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="mono wide text-[10px] text-ink-400">ANALYTICS</div>
+          <div class="font-light text-[15px] mt-0.5">Fleet-wide telemetry</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ================= 09 CTA ================= -->
+<section id="s9" class="slide slide-pad">
+  <div class="max-w-6xl mx-auto w-full relative">
+    <div class="flex items-center gap-3 rev">
+      <span class="mono text-ink-400 text-xs wide">09 — Next step</span>
+    </div>
+    <h2 class="mt-8 tight text-[56px] md:text-[112px] leading-[0.95] font-light rev rev-delay-1 max-w-5xl">
+      Let's take Seawind <span class="serif italic">offshore,</span><br/>
+      online.
+    </h2>
+    <p class="mt-10 max-w-xl text-ink-300 text-lg rev rev-delay-2">
+      A forty-five minute walk-through with your leadership team. Real screens, real numbers, a path to a working MVP in your hands in eight weeks.
+    </p>
+
+    <div class="mt-12 flex flex-wrap gap-3 rev rev-delay-3">
+      <a href="mailto:cakirogluarman@gmail.com" class="btn btn-p">Book the pitch meeting
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#s1" class="btn btn-g">Replay the deck</a>
+    </div>
+
+    <div class="mt-24 pt-10 border-t border-white/8 flex flex-wrap items-center justify-between gap-4 mono wide text-[10px] text-ink-400 rev rev-delay-4">
+      <div>© 2026 · NAUTICO — PREPARED FOR SEAWIND EUROPE</div>
+      <div>İZMİR · SYDNEY · WORLDWIDE</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================= SCRIPTS ================= -->
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  // stars on cover
+  (function(){
+    const host = document.getElementById('stars');
+    if(!host) return;
+    for(let i=0;i<80;i++){
+      const s = document.createElement('div');
+      s.className='star';
+      s.style.top = Math.random()*100 + '%';
+      s.style.left = Math.random()*100 + '%';
+      s.style.opacity = (0.12 + Math.random()*0.5).toFixed(2);
+      s.style.transform = `scale(${(0.5 + Math.random()*1.2).toFixed(2)})`;
+      host.appendChild(s);
+    }
+  })();
+
+  // Progress line
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const p = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    document.getElementById('prog').style.transform = `scaleX(${p})`;
+  });
+
+  // Reveals
+  document.querySelectorAll('.rev').forEach(el => {
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 88%',
+      onEnter: () => el.classList.add('in'),
+      onEnterBack: () => el.classList.add('in'),
+    });
+  });
+
+  // Slide counter + rail
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const rail = document.querySelectorAll('#rail a');
+  const cur = document.getElementById('cur');
+
+  slides.forEach((s, i) => {
+    ScrollTrigger.create({
+      trigger: s,
+      start: 'top center',
+      end: 'bottom center',
+      onToggle: (self) => {
+        if(self.isActive){
+          cur.textContent = String(i+1).padStart(2,'0');
+          rail.forEach(a => a.classList.remove('active'));
+          if(rail[i]) rail[i].classList.add('active');
+        }
+      }
+    });
+  });
+
+  // Prev / Next
+  function currentIndex(){
+    let best = 0, bestDist = Infinity;
+    slides.forEach((s, i) => {
+      const rect = s.getBoundingClientRect();
+      const dist = Math.abs(rect.top);
+      if(dist < bestDist){ bestDist = dist; best = i; }
+    });
+    return best;
+  }
+  function go(dir){
+    const idx = currentIndex();
+    const target = slides[Math.min(slides.length-1, Math.max(0, idx + dir))];
+    target.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  document.getElementById('prev').addEventListener('click', () => go(-1));
+  document.getElementById('next').addEventListener('click', () => go(1));
+  document.addEventListener('keydown', (e) => {
+    if(['ArrowRight','PageDown',' '].includes(e.key)){ e.preventDefault(); go(1); }
+    if(['ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); go(-1); }
+  });
+
+  // Browser frame entry animation
+  gsap.from('#browserFrame .browser', {
+    y: 40, opacity: 0, duration: 1.1, ease: 'power3.out',
+    scrollTrigger: { trigger: '#browserFrame', start: 'top 80%' }
+  });
+  gsap.from('#browserFrame .callout', {
+    x: (i, el) => el.style.left ? -40 : 40, opacity: 0, duration: .9, stagger: .1, ease: 'power2.out',
+    scrollTrigger: { trigger: '#browserFrame', start: 'top 70%' }
+  });
+
+  // Tabs with app content
+  const bigscreen = document.getElementById('bigscreen');
+  const tbs = document.querySelectorAll('.tb');
+
+  const screens = {
+    log: `
+      <div class="appbar">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="mono wide text-[9px] text-ink-400">PASSAGE</div>
+            <div class="serif italic text-[22px] leading-tight mt-0.5">Bodrum → Kos</div>
+            <div class="text-[11px] text-ink-400">Day 1 · 14:20</div>
+          </div>
+          <div class="iconbox" style="width:30px; height:30px; border-radius:999px; border-color:rgba(244,241,234,0.12);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#F4F1EA" stroke-width="1.5"/><path d="M21 21l-5-5" stroke="#F4F1EA" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 space-y-3">
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="mono wide text-[9px] text-ink-400">LIVE TRACK</div>
+          <svg viewBox="0 0 240 60" class="mt-1 spark">
+            <path d="M6,40 Q 60,10 120,30 T 234,22" stroke="#D4B07A" stroke-width="1.6" fill="none"/>
+          </svg>
+          <div class="flex justify-between text-[10px] mt-1.5 text-ink-400">
+            <span>SOG 6.4kt</span><span>HDG 268°</span><span>DTG 4.1nm</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+            <div class="text-[9px] mono wide text-ink-400">WIND</div>
+            <div class="serif italic text-xl mt-0.5">14kt</div>
+            <div class="text-[10px] text-ink-400">NE</div>
+          </div>
+          <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+            <div class="text-[9px] mono wide text-ink-400">DEPTH</div>
+            <div class="serif italic text-xl mt-0.5">38m</div>
+            <div class="text-[10px] text-ink-400">Stable</div>
+          </div>
+          <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+            <div class="text-[9px] mono wide text-ink-400">CREW</div>
+            <div class="serif italic text-xl mt-0.5">4</div>
+            <div class="text-[10px] text-ink-400">On watch</div>
+          </div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(74,144,184,0.12); border:1px solid rgba(74,144,184,0.35);">
+          <div class="mono wide text-[9px] text-ink-400">LOG · 13:58</div>
+          <div class="text-[12px] mt-1">Gennaker up. Flat sea. Light NE. Gorgeous.</div>
+        </div>
+      </div>
+    `,
+    build: `
+      <div class="appbar">
+        <div>
+          <div class="mono wide text-[9px] text-ink-400">BUILD TRACKER</div>
+          <div class="serif italic text-[22px] leading-tight mt-0.5">Hull 014 · 1270</div>
+          <div class="text-[11px] text-ink-400">İzmir · 62% complete</div>
+        </div>
+      </div>
+      <div class="px-4 space-y-3">
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="mono wide text-[9px] text-ink-400">DONE · HULL LAMINATION</div>
+          <div class="mt-2 h-1 rounded-full bg-white/10 overflow-hidden"><div class="h-full" style="width:100%; background:#D4B07A;"></div></div>
+          <div class="text-[10px] text-ink-400 mt-1">Signed off · 12 Apr 2026</div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="mono wide text-[9px] text-ink-400">NOW · INTERIOR JOINERY</div>
+          <div class="mt-2 h-1 rounded-full bg-white/10 overflow-hidden"><div class="h-full" style="width:42%; background:#4A90B8;"></div></div>
+          <div class="text-[10px] text-ink-400 mt-1">42% · due 28 May</div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="mono wide text-[9px] text-ink-400">NEXT · SYSTEMS</div>
+          <div class="mt-2 h-1 rounded-full bg-white/10 overflow-hidden"><div class="h-full" style="width:0%"></div></div>
+          <div class="text-[10px] text-ink-400 mt-1">Starts 1 Jun</div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(212,176,122,0.14); border:1px solid rgba(212,176,122,0.35);">
+          <div class="mono wide text-[9px]" style="color:#D4B07A">YARD PHOTO · TODAY</div>
+          <div class="mt-2 h-20 rounded-md" style="background: linear-gradient(160deg,#1E4060,#0B0D10);"></div>
+          <div class="text-[11px] mt-2">"Bulkheads fitted. Wiring in port hull today." — Mert, PM</div>
+        </div>
+      </div>
+    `,
+    service: `
+      <div class="appbar">
+        <div>
+          <div class="mono wide text-[9px] text-ink-400">SERVICE</div>
+          <div class="serif italic text-[22px] leading-tight mt-0.5">Ocean Marina, TH</div>
+          <div class="text-[11px] text-ink-400">Authorised Seawind dealer</div>
+        </div>
+      </div>
+      <div class="px-4 space-y-3">
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="mono wide text-[9px] text-ink-400">DUE SOON</div>
+          <div class="mt-1 text-[13px]">Yanmar · 250hr service</div>
+          <div class="text-[10px] text-ink-400">Recommended in 14 days</div>
+          <div class="mt-3 flex gap-2">
+            <span class="text-[10px] px-2 py-1 rounded-full" style="background:#D4B07A; color:#0B0D10;">Book</span>
+            <span class="text-[10px] px-2 py-1 rounded-full border border-white/20">Self-service</span>
+          </div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="mono wide text-[9px] text-ink-400">WARRANTY · OPEN</div>
+          <div class="mt-1 text-[13px]">Watermaker membrane</div>
+          <div class="text-[10px] text-ink-400">Ticket SW-2206 · in review</div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="mono wide text-[9px] text-ink-400">HISTORY</div>
+          <div class="mt-1 text-[13px]">Antifoul · Feb 2026</div>
+          <div class="text-[13px]">Rigging check · Dec 2025</div>
+        </div>
+      </div>
+    `,
+    parts: `
+      <div class="appbar">
+        <div>
+          <div class="mono wide text-[9px] text-ink-400">PARTS · EXPLODED VIEW</div>
+          <div class="serif italic text-[22px] leading-tight mt-0.5">Tap a component</div>
+        </div>
+      </div>
+      <div class="px-4 space-y-3">
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <svg viewBox="0 0 200 90" class="w-full spark">
+            <path d="M10,60 Q 100,20 190,60" stroke="#4A90B8" stroke-width="1.4" fill="none"/>
+            <circle cx="48" cy="48" r="4" fill="#D4B07A"/>
+            <circle cx="100" cy="30" r="4" fill="#D4B07A"/>
+            <circle cx="150" cy="48" r="4" fill="#D4B07A"/>
+          </svg>
+          <div class="text-[10px] text-ink-400 mt-1.5">3 hotspots · genoa car · halyard clutch · boom vang</div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="mono wide text-[9px] text-ink-400">CART</div>
+          <div class="flex justify-between text-[12px] mt-1.5"><span>Genoa car × 1</span><span>€184</span></div>
+          <div class="flex justify-between text-[12px]"><span>Shipping · DHL</span><span>€28</span></div>
+          <div class="border-t border-white/10 mt-2 pt-2 flex justify-between serif italic text-[16px]"><span>Total</span><span>€212</span></div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(212,176,122,0.14); border:1px solid rgba(212,176,122,0.35);">
+          <div class="mono wide text-[9px]" style="color:#D4B07A;">MANUALS</div>
+          <div class="text-[12px] mt-1">1270 Owner's Manual · EN · TR · FR</div>
+        </div>
+      </div>
+    `,
+    flot: `
+      <div class="appbar">
+        <div>
+          <div class="mono wide text-[9px] text-ink-400">FLOTILLA</div>
+          <div class="serif italic text-[22px] leading-tight mt-0.5">Ionian · Sep 2026</div>
+          <div class="text-[11px] text-ink-400">Corfu → Lefkada · 7 days</div>
+        </div>
+      </div>
+      <div class="px-4 space-y-3">
+        <div class="p-3 rounded-xl" style="background:rgba(74,144,184,0.15); border:1px solid rgba(74,144,184,0.35);">
+          <div class="mono wide text-[9px] text-ink-400">INVITATION</div>
+          <div class="serif italic text-[18px] mt-0.5">You're invited.</div>
+          <div class="text-[11px] text-ink-400">Hosted by Seawind Europe · 14 boats confirmed</div>
+          <div class="mt-3 flex gap-2">
+            <span class="text-[10px] px-2 py-1 rounded-full" style="background:#D4B07A; color:#0B0D10;">RSVP</span>
+            <span class="text-[10px] px-2 py-1 rounded-full border border-white/20">Details</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+            <div class="mono wide text-[9px] text-ink-400">NEXT MEETUP</div>
+            <div class="text-[13px] mt-1">Cannes Yachting Festival</div>
+          </div>
+          <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+            <div class="mono wide text-[9px] text-ink-400">YOUR CHAPTER</div>
+            <div class="text-[13px] mt-1">Türkiye · 9 boats</div>
+          </div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="mono wide text-[9px] text-ink-400">RECENT STORY</div>
+          <div class="text-[12px] mt-1">"12 days, 6 islands, one 1170." — Anna &amp; Mark</div>
+        </div>
+      </div>
+    `,
+    weather: `
+      <div class="appbar">
+        <div>
+          <div class="mono wide text-[9px] text-ink-400">WEATHER · KOS</div>
+          <div class="serif italic text-[22px] leading-tight mt-0.5">Next 48 hours</div>
+        </div>
+      </div>
+      <div class="px-4 space-y-3">
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="serif italic text-[30px] leading-none">22°</div>
+              <div class="text-[10px] text-ink-400 mt-1">Partly clear</div>
+            </div>
+            <div class="text-right">
+              <div class="serif italic text-[18px]">NE · 14kt</div>
+              <div class="text-[10px] text-ink-400">Gusts 18kt</div>
+            </div>
+          </div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(244,241,234,0.05); border:1px solid rgba(244,241,234,0.07);">
+          <div class="mono wide text-[9px] text-ink-400">WIND · 48H</div>
+          <svg viewBox="0 0 240 50" class="w-full mt-2 spark"><path d="M0,40 L30,32 L60,24 L90,28 L120,18 L150,26 L180,14 L210,22 L240,20" stroke="#4A90B8" stroke-width="1.6" fill="none"/></svg>
+          <div class="flex justify-between text-[9px] text-ink-400 mt-1"><span>Now</span><span>+12h</span><span>+24h</span><span>+36h</span><span>+48h</span></div>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(212,176,122,0.14); border:1px solid rgba(212,176,122,0.35);">
+          <div class="mono wide text-[9px]" style="color:#D4B07A;">SAIL PLAN</div>
+          <div class="text-[12px] mt-1">Dep 08:00 · 1 reef · ETA Kos 11:15</div>
+        </div>
+      </div>
+    `,
+  };
+
+  function setScreen(key){
+    tbs.forEach(t => t.setAttribute('aria-selected', t.dataset.tab === key ? 'true' : 'false'));
+    bigscreen.innerHTML = screens[key];
+    bigscreen.classList.remove('scr-fade'); void bigscreen.offsetWidth; bigscreen.classList.add('scr-fade');
+  }
+  tbs.forEach(t => t.addEventListener('click', () => setScreen(t.dataset.tab)));
+  setScreen('log');
+
+  // auto rotate for demo effect
+  let auto;
+  const keys = ['log','build','service','parts','flot','weather'];
+  let i = 0;
+  function startAuto(){ stopAuto(); auto = setInterval(() => { i = (i+1) % keys.length; setScreen(keys[i]); }, 4500); }
+  function stopAuto(){ clearInterval(auto); }
+  ScrollTrigger.create({
+    trigger: '#s6',
+    start: 'top 60%',
+    end: 'bottom 40%',
+    onEnter: startAuto,
+    onLeave: stopAuto,
+    onEnterBack: startAuto,
+    onLeaveBack: stopAuto,
+  });
+  tbs.forEach(t => t.addEventListener('click', () => { stopAuto(); i = keys.indexOf(t.dataset.tab); }));
+
+</script>
+
+</body>
+</html>
